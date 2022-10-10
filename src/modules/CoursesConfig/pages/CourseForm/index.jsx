@@ -15,15 +15,35 @@ import {
   Upload,
   Modal
 } from 'antd';
+import { useEffect } from 'react';
+import { getImageCourseFromBD } from '../../services/CourseServices';
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-const SesionFormModal = (isModalOpen, setIsModalOpen) => {
+const CourseFormModal = ({
+  isModalOpen,
+  setIsModalOpen,
+  currentOpenedCourse, 
+  setCurrentOpenedCourse
+}) => {
+
+  const [images, setImages] = useState([]);
+
+  useEffect( () => {
+    getAllFiles();
+  }, []);
+  
+  const getAllFiles = async() => {
+    const files = await getImageCourseFromBD(currentOpenedCourse.title);
+    setImages(files);
+  };
+
   const onFormLayoutChange = ({ disabled }) => {
     // setComponentDisabled(disabled);
   };
 
   const handleOk = () => {
+    setCurrentOpenedCourse({});
     setIsModalOpen(false);
   };
 
@@ -33,7 +53,8 @@ const SesionFormModal = (isModalOpen, setIsModalOpen) => {
 
   return (
     <Modal 
-      title="Session form"
+      open={isModalOpen}
+      title="Course form"
       onOk={handleOk}
       onCancel={handleCancel}
       cancelText="Cerrar"
@@ -49,16 +70,16 @@ const SesionFormModal = (isModalOpen, setIsModalOpen) => {
         layout="horizontal"
         onValuesChange={onFormLayoutChange}
       >
-        <Form.Item label="Radio">
+        {/* <Form.Item label="Radio">
           <Radio.Group>
             <Radio value="apple"> Apple </Radio>
             <Radio value="pear"> Pear </Radio>
           </Radio.Group>
+        </Form.Item> */}
+        <Form.Item label="Title of course">
+          <Input value={currentOpenedCourse.title}/>
         </Form.Item>
-        <Form.Item label="Input">
-          <Input />
-        </Form.Item>
-        <Form.Item label="Select">
+        {/* <Form.Item label="Select">
           <Select>
             <Select.Option value="demo">Demo</Select.Option>
           </Select>
@@ -100,8 +121,8 @@ const SesionFormModal = (isModalOpen, setIsModalOpen) => {
         </Form.Item>
         <Form.Item label="RangePicker">
           <RangePicker />
-        </Form.Item>
-        <Form.Item label="InputNumber">
+        </Form.Item> */}
+        {/* <Form.Item label="InputNumber">
           <InputNumber />
         </Form.Item>
         <Form.Item label="TextArea">
@@ -109,9 +130,12 @@ const SesionFormModal = (isModalOpen, setIsModalOpen) => {
         </Form.Item>
         <Form.Item label="Switch" valuePropName="checked">
           <Switch />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item label="Upload" valuePropName="fileList">
-          <Upload action="/upload.do" listType="picture-card">
+          <Upload 
+            listType="picture-card"
+            fileList={images}
+          >
             <div>
               <PlusOutlined />
               <div
@@ -132,4 +156,4 @@ const SesionFormModal = (isModalOpen, setIsModalOpen) => {
   );
 };
 
-export default SesionFormModal;
+export default CourseFormModal;
