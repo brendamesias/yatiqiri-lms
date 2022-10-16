@@ -2,6 +2,7 @@ import React from "react";
 import { signInWithGoogle } from "./Services/auth";
 import { Navigate } from "react-router-dom";
 import UserContext from "./UserContext";
+import { LoginContainer } from "./styles";
 
 const Login = () => {
 
@@ -12,9 +13,9 @@ const Login = () => {
     }
 
     return(
-        <div>
+        <LoginContainer>
             <button onClick={() => signInWithGoogle(setUser)} className="p-3 bg-yellow-200">Login with Google</button>
-        </div>
+        </LoginContainer>
     )
 }
 

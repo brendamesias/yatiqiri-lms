@@ -1,8 +1,6 @@
-import { async } from '@firebase/util';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where, setDoc, doc } from "firebase/firestore";
 import { db, auth } from "../../../../firebase";
-import { redirect } from "react-router-dom";
 const googleProvider = new GoogleAuthProvider();
 
 const getUser = (user) => ({
@@ -12,7 +10,7 @@ const getUser = (user) => ({
     photoURL: user.photoURL
 })
 
-const saveNewUserInBD = async (user) => addDoc(collection(db, "users"), user);
+const saveNewUserInBD = async (user) => setDoc(doc(db, "users", user.uid), user);
 
 const validateUserExisteInBD = async (userId) => {
     const q = query(collection(db, "users"), where("uid", "==", userId));
