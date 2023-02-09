@@ -54,7 +54,7 @@ const CourseFormModal = ({
   const uploadFileInCourse = async(doc) => {
     const courseDocName = currentOpenedCourse.title;
     uploadFileToCourse(courseDocName, doc);
-};
+  };
 
   return (
     <Modal 
@@ -75,7 +75,6 @@ const CourseFormModal = ({
         layout="horizontal"
         onValuesChange={onFormLayoutChange}
       >
- 
         <Form.Item label="Title of course">
           <Input value={currentOpenedCourse.title}/>
         </Form.Item>

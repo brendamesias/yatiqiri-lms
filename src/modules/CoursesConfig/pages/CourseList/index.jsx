@@ -7,6 +7,8 @@ import {Input, Button} from 'antd';
 import { createNewCourseInBD } from '../../services/CourseServices';
 
 const CourseList = () => {
+  const [count, setCount] = useState(10);
+
   const [courseList, setCoursesList] = useState([]);
   const [newCourseInput, setNewCourseInput] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,6 +44,12 @@ const CourseList = () => {
 
     return (
       <>
+      <p>COUNTER:</p>
+      <h2>{count}</h2>
+      <button onClick={() => setCount(count + 1)}>+1</button>
+      <button id="boton-de-resta" onClick={() => setCount(count - 1)}>-1</button>
+      <button onClick={() => setCount(10)}>reset</button>
+        {/* <h2>Lista de cursos</h2>
         <div className='mt-12 flex flex-col items-center'>
           { courseList.map(course => (
             <CourseItem 
@@ -67,7 +75,7 @@ const CourseList = () => {
             currentOpenedCourse={currentOpenedCourse}
             setCurrentOpenedCourse={setCurrentOpenedCourse}
           />
-        }
+        } */}
       </>
     );
 }
