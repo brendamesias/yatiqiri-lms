@@ -17,8 +17,9 @@ import {
 } from 'antd';
 import { useEffect } from 'react';
 import { getImageCourseFromBD, uploadFileToCourse } from '../../services/CourseServices';
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
+
+import SesionList from '../../../SesionsConfig/pages/SesionList';
+
 
 const CourseFormModal = ({
   isModalOpen,
@@ -96,9 +97,10 @@ const CourseFormModal = ({
             </div>
           </Upload>
         </Form.Item>
-        <Form.Item label="Button">
+        <SesionList />
+        {/* <Form.Item label="Button">
           <Button>Button</Button>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );

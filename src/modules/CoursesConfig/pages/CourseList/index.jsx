@@ -5,10 +5,12 @@ import {db} from '../../../../firebase'
 import { CourseItem } from './styles';
 import {Input, Button} from 'antd';
 import { createNewCourseInBD } from '../../services/CourseServices';
+import { closeSesion } from '../../../UsersConfig/Login/Services/auth';
+import {useNavigate} from 'react-router-dom';
 
 const CourseList = () => {
-  const [count, setCount] = useState(10);
 
+  const navigate = useNavigate();
   const [courseList, setCoursesList] = useState([]);
   const [newCourseInput, setNewCourseInput] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,29 +38,39 @@ const CourseList = () => {
     setIsModalOpen(true);
   };
 
-    const createNewCourse = () => {
+    const createNewCourse = async() => {
     const payload = {title: newCourseInput};
-    createNewCourseInBD(payload);
+    const responseCreateCourse = await createNewCourseInBD(payload);
+    if(responseCreateCourse){
+      //pendiente agregar loading
+      getCourses();
+    }
     setNewCourseInput("");
+  }
+
+  const logout = async() => {
+    closeSesion().then(()=>{
+      navigate("/");
+    });
   }
 
     return (
       <>
-      <p>COUNTER:</p>
-      <h2>{count}</h2>
-      <button onClick={() => setCount(count + 1)}>+1</button>
-      <button id="boton-de-resta" onClick={() => setCount(count - 1)}>-1</button>
-      <button onClick={() => setCount(10)}>reset</button>
-        {/* <h2>Lista de cursos</h2>
+        <h2>Lista de cursos</h2>
+        <Button onClick={logout}>Cerrar sesion</Button>
         <div className='mt-12 flex flex-col items-center'>
-          { courseList.map(course => (
-            <CourseItem 
-              onClick={() => openCourseForm(course)}
-              key={course.id}
-            >
-              {course.title}
-            </CourseItem>
-          ))}
+          { courseList.length > 0 ?
+            (
+              courseList.map(course => (
+                <CourseItem 
+                  onClick={() => openCourseForm(course)}
+                  key={course.id}
+                >
+                  {course.title}
+                </CourseItem>
+              ))
+            ) : <h3>cargando...</h3>
+            }
           <br /><br />
           <div className='block'>
             <Input.Group>
@@ -75,7 +87,7 @@ const CourseList = () => {
             currentOpenedCourse={currentOpenedCourse}
             setCurrentOpenedCourse={setCurrentOpenedCourse}
           />
-        } */}
+        }
       </>
     );
 }

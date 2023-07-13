@@ -3,11 +3,13 @@ import { addDoc, collection, getDocs, query, where, setDoc, doc } from "firebase
 import { db, auth } from "../../../../firebase";
 const googleProvider = new GoogleAuthProvider();
 
-const getUser = (user) => ({
-    uid: user.uid,
-    name: user.displayName,
-    email: user.email,
-    photoURL: user.photoURL
+//user que se obtiene de signInWithPopup de firebase
+const userAuthParsedObject = (userOfAuth) => ({
+    uid: userOfAuth.uid,
+    name: userOfAuth.displayName,
+    email: userOfAuth.email,
+    photoURL: userOfAuth.photoURL,
+    role: userOfAuth.uid === 'DILVopGGwpUn7Geda6WXZmmra123' ? "admin" : "student"
 })
 
 const saveNewUserInBD = async (user) => setDoc(doc(db, "users", user.uid), user);
@@ -18,18 +20,17 @@ const validateUserExisteInBD = async (userId) => {
     return docs.docs.length === 0;
 }
 
-export const signInWithGoogle = async (setUser) => {
+export const signInWithGoogle = async () => {
     try {
         const singInResponse = await signInWithPopup(auth, googleProvider);
-        const user = getUser(singInResponse.user);
-        setUser(user)
-        setUserInSessionStorage(user);
-
-        const userDontExistInBD = await validateUserExisteInBD(user.uid)
+        const userId = singInResponse.user.uid;
+        const userDontExistInBD = await validateUserExisteInBD(userId)
         if (userDontExistInBD) { 
-            saveNewUserInBD(user);
-        };
-
+            saveNewUserInBD(singInResponse.user);
+        }
+        const user = userAuthParsedObject(singInResponse.user);
+        setUserInSessionStorage(user);
+        return user;
     } catch (err) {
         console.error(err);
     };
@@ -37,10 +38,9 @@ export const signInWithGoogle = async (setUser) => {
 
 const setUserInSessionStorage = (user) => sessionStorage.setItem("user", JSON.stringify(user));
 
-export const closeSesion = () => {
-    signOut(auth).then(() => {
-        sessionStorage.removeItem("user")
-
+export const closeSesion = async() => {
+    return signOut(auth).then(() => {
+        sessionStorage.removeItem("user");
     }).catch((error) => {
         console.error(error);
     });

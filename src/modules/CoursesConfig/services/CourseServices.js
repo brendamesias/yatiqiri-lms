@@ -34,7 +34,9 @@ export const uploadFileToCourse = async(courseName, doc) => {
 }
 
 export const createNewCourseInBD = async(courseInfo) => {
-    const { uid } = JSON.parse(sessionStorage.getItem('user'));
-    const docRef = await addDoc(collection(db,"users", uid, "courses"), courseInfo);
-    console.log(docRef);  
+    // Lo comentado crea un curso pero solo para el usuario que inició sesion, y lo crea en los cursos del propio usuario en el storage, a un usuario estudiante se le pueden asiganr cursos pero no puede crearlos por el mismo.
+    // const { uid } = JSON.parse(sessionStorage.getItem('user'));
+    // const docRef = await addDoc(collection(db,"users", uid, "courses"), courseInfo);
+    const docRef = await addDoc(collection(db, "courses"), courseInfo);
+    return docRef;
 }

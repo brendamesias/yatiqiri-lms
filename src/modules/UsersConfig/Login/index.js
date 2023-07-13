@@ -1,21 +1,30 @@
 import React from "react";
 import { signInWithGoogle } from "./Services/auth";
-import { Navigate } from "react-router-dom";
-import UserContext from "./UserContext";
+import { Outlet } from "react-router-dom";
 import { LoginContainer } from "./styles";
+import {useNavigate} from 'react-router-dom';
 
 const Login = () => {
+    const userSessionStorage = sessionStorage.getItem('user');
+    console.log("userSessionStorage", userSessionStorage)
+    const navigate = useNavigate();
 
-    const {user, setUser} = React.useContext(UserContext); 
-
-    if(Object.values(user).length > 0){
-        return (<Navigate to="/course-list" replace={true} />)
+    const singnIn = async () => {
+        const usersingnIn = await signInWithGoogle();
+        if (Object.values(usersingnIn).length > 0){
+            navigate("/course-list");
+        }
     }
 
     return(
-        <LoginContainer>
-            <button onClick={() => signInWithGoogle(setUser)} className="p-3 bg-yellow-200">Login with Google</button>
-        </LoginContainer>
+        <>
+        {!userSessionStorage &&
+            <LoginContainer>
+                <button onClick={singnIn} className="p-3 bg-yellow-200">Login with Google</button>
+            </LoginContainer>
+        }
+        <Outlet />
+    </>
     )
 }
 
