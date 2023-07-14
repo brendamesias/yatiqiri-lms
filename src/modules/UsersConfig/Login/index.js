@@ -3,6 +3,11 @@ import { signInWithGoogle } from "./Services/auth";
 import { Outlet } from "react-router-dom";
 import { LoginContainer } from "./styles";
 import {useNavigate} from 'react-router-dom';
+import logo from '../../../assets/images/logos/logo-blanco.png'
+import fondoDesktop from '../../../assets/images/logos/fondo-yatiqiri-desktop.png'
+import fondoMobile from '../../../assets/images/logos/fondo-yatiqiri-mobile.png'
+import { GoogleOutlined } from '@ant-design/icons';
+import { Button } from "antd";
 
 const Login = () => {
     const userSessionStorage = sessionStorage.getItem('user');
@@ -19,8 +24,13 @@ const Login = () => {
     return(
         <>
         {!userSessionStorage &&
-            <LoginContainer>
-                <button onClick={singnIn} className="p-3 bg-yellow-200">Login with Google</button>
+            <LoginContainer className="flex flex-col" imageMobile={fondoMobile} imageDesktop={fondoDesktop}>
+                <p className="text-yellow-400 text-xl font-semibold w-80 text-center z-20">Integramos tecnología a tu pasión para transformar tu futuro</p>
+                <img className="w-24 brightness-125 absolute top-7 left-8" src={logo} alt="logo-yatiqiri"/>
+                <Button ghost onClick={singnIn} className="flex items-center text-base p-6 mt-6">
+                    Iniciar sesión con google
+                    <GoogleOutlined className="ml-2"/>
+                </Button>
             </LoginContainer>
         }
         <Outlet />
